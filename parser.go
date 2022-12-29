@@ -70,6 +70,7 @@ func (c *cache) getValue() *Value {
 	return &c.vs[len(c.vs)-1]
 }
 
+// 首先检查字符串长度是否为0或者第一个字符的ASCII码是否大于32（即不是空白字符），如果是，则直接返回原字符串。否则，调用skipWSSlow函数进行处理。
 func skipWS(s string) string {
 	if len(s) == 0 || s[0] > 0x20 {
 		// Fast path.
@@ -78,6 +79,7 @@ func skipWS(s string) string {
 	return skipWSSlow(s)
 }
 
+// 检查字符串长度是否为0或者第一个字符是否不是空白字符，如果是，则直接返回原字符串。否则，通过遍历字符串，找到第一个非空白字符，并返回从该字符开始的子串。如果字符串中全是空白字符，则返回空字符串。
 func skipWSSlow(s string) string {
 	if len(s) == 0 || s[0] != 0x20 && s[0] != 0x0A && s[0] != 0x09 && s[0] != 0x0D {
 		return s
@@ -106,7 +108,7 @@ func parseValue(s string, c *cache, depth int) (*Value, string, error) {
 	if depth > MaxDepth {
 		return nil, s, fmt.Errorf("too big depth for the nested JSON; it exceeds %d", MaxDepth)
 	}
-
+	// 通过第一个字符判断是否为对象、数组、字符串、true、false、null，然后调用对应的解析函数进行处理。
 	if s[0] == '{' {
 		v, tail, err := parseObject(s[1:], c, depth)
 		if err != nil {
@@ -570,6 +572,12 @@ type Value struct {
 	a []*Value
 	s string
 	t Type
+}
+
+func (v *Value) Range(f func(key string, v *Value)) {
+	for key, value := range v.o.kvs {
+		f(v.o.kvs[key].k, value.v)
+	}
 }
 
 // MarshalTo appends marshaled v to dst and returns the result.
