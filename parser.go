@@ -574,10 +574,8 @@ type Value struct {
 	t Type
 }
 
-func (v *Value) Range(f func(key string, v *Value)) {
-	for key, value := range v.o.kvs {
-		f(v.o.kvs[key].k, value.v)
-	}
+func (v *Value) Range(f func(key []byte, v *Value)) {
+	v.o.Visit(f)
 }
 
 // MarshalTo appends marshaled v to dst and returns the result.
