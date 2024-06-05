@@ -2,7 +2,7 @@ package fastjson
 
 import (
 	"fmt"
-	"github.com/valyala/fastjson/fastfloat"
+	"github.com/leaf-rain/fastjson/fastfloat"
 	"strconv"
 	"strings"
 	"unicode/utf16"

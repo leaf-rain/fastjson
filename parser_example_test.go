@@ -2,7 +2,7 @@ package fastjson_test
 
 import (
 	"fmt"
-	"github.com/valyala/fastjson"
+	"github.com/leaf-rain/fastjson"
 	"log"
 	"strconv"
 )
